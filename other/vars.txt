@@ -1,0 +1,8 @@
+NACA="2412"
+ITER="70"
+RE="50000"
+VISC="50000"
+OUT="naca$NACA.txt"
+STRT="0"
+STOP="10"
+STEP="1"
