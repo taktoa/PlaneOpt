@@ -2,6 +2,8 @@
 
 [[ -n "$1" ]] && VARS="$1"
 [[ -z "$1" ]] && VARS="vars.txt"
+[[ "$1" = "/dev/stdin" ]] && VARS="$(mktemp tmp.runxfoil.XXXX)"
+[[ "$1" = "/dev/stdin" ]] && cat "$1" > $VARS
 
 [[ -n "$2" ]] && SCR="$2"
 [[ -z "$2" ]] && SCR="script.xfoil"
@@ -16,6 +18,9 @@ paste -d ' ' $TEMP1 $TEMP1 | sed 's/ /\/$/g; s/^/sed \"s\/%/g; s/$/\/g\" | /g' |
 cat $VARS $TEMP2 $CMDS | bash | xfoil &> /dev/null
 rm -f $TEMP1 $TEMP2
 
-cat $OUT
+echo "alpha cl cd cm"
+cat $OUT | sed '1,/alpha/d' | tail -n +2 | sed 's/ [ ]*/ /g;s/^ //g' | cut -d ' ' -f 1-3,5
 
 rm -f :00.bl $OUT
+
+[[ "$1" = "/dev/stdin" ]] && rm -f $VARS
